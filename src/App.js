@@ -4,9 +4,8 @@ import TodoForm from './components/TodoForm'
 import TodoList from './components/TodoList'
 
 class App extends React.Component {
-
-  constructor(props){
-    super(props);
+  constructor(){
+    super();
     this.state = {
       newTask: {
         task: '',
@@ -16,6 +15,13 @@ class App extends React.Component {
     }
   }
 
+  componentDidMount(){
+    this.setState({
+      ...this.state,
+      thingsToDo: JSON.parse(localStorage.getItem("thingsToDoList")) || []
+    })
+  }
+  
   updateNewTask = e =>{
     this.setState({
       ...this.state, 
@@ -37,7 +43,14 @@ class App extends React.Component {
         completed: false
       },
       thingsToDo: [...this.state.thingsToDo, task]
-    })
+    });
+  }
+
+  // save to local storage
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.thingsToDo !== this.state.thingsToDo){
+      localStorage.setItem("thingsToDoList", JSON.stringify(this.state.thingsToDo))
+    }
   }
  
   changeCompleted = taskId => {
